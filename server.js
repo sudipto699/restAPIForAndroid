@@ -64,8 +64,8 @@ app.get("/:id", (req, res) => {
 });
 
 app.put("/update/:id", (req, res) => {
-  Incident.findByIdAndUpdate(
-    req.params.id,
+  Incident.findOneAndUpdate(
+    {incident_number: req.params.id},
     {
       incident_number: req.body.incident_number,
       short_description: req.body.short_description,
@@ -84,3 +84,12 @@ app.put("/update/:id", (req, res) => {
       res.status(500).json({ error: err });
     });
 });
+
+app.delete('/:id',async (req,res) => {
+  const deleteItem = await Incident.findOneAndDelete({ incident_number: req.params.id })
+  if (!deleteItem){
+    return res.status(404).json({success : false })
+  }
+  res.status(200).send(`item number ${deleteItem.incident_number} is deleted`)
+
+})
